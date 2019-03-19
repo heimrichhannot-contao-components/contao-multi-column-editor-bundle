@@ -1,4 +1,5 @@
 import Sortable from 'sortablejs';
+import 'formdata-polyfill'; // ie and edge
 
 class MultiColumnEditorBundle {
     static init() {
