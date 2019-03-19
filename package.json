@@ -1,0 +1,13 @@
+{
+  "name": "@hundh/contao-multi-column-editor-bundle",
+  "version": "1.0.0",
+  "description": "This package contains the frontend assets of the composer bundle heimrichhannot/contao-multi-column-editor-bundle.",
+  "main": "js/contao-multi-column-editor-bundle.js",
+  "repository": "git@github.com:heimrichhannot-contao-components/contao-multi-column-editor-bundle.git",
+  "author": "Heimrich & Hannot <digitales@heimrich-hannot.de>",
+  "license": "MIT",
+  "dependencies": {
+    "@hundh/contao-utils-bundle": "^1.6",
+    "sortablejs": "^1.7"
+  }
+}
