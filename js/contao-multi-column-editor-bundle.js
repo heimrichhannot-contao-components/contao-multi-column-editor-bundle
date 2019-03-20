@@ -22,6 +22,11 @@ class MultiColumnEditorBundle {
             MultiColumnEditorBundle.triggerAction(isBackend, item, 'deleteRow');
         });
 
+        // fix for firefox and IE
+        utilsBundle.event.addDynamicEventListener('click', '.multi-column-editor .drag-handle', function(item, event) {
+            event.preventDefault();
+        });
+
         MultiColumnEditorBundle.initSortable(isBackend);
     }
 
