@@ -1,4 +1,3 @@
-import Sortable from 'sortablejs';
 import 'formdata-polyfill'; // ie and edge
 
 class MultiColumnEditorBundle {
@@ -65,35 +64,37 @@ class MultiColumnEditorBundle {
         }
         else
         {
-            let sortables = document.querySelectorAll('.multi-column-editor-wrapper .sortable');
+            import(/* webpackChunkName: "sortablejs" */ 'sortablejs').then(function(Sortable) {
+                let sortables = document.querySelectorAll('.multi-column-editor-wrapper .sortable');
 
-            sortables.forEach(function(item) {
-                Sortable.create(item, {
-                    'handle' : '.drag-handle',
-                    onEnd: function(event) {
-                        let newIndices = [],
-                            doPost = false,
-                            rows = event.item.closest('.rows').querySelectorAll('.mce-row');
+                sortables.forEach(function(item) {
+                    Sortable.create(item, {
+                        'handle' : '.drag-handle',
+                        onEnd: function(event) {
+                            let newIndices = [],
+                                doPost = false,
+                                rows = event.item.closest('.rows').querySelectorAll('.mce-row');
 
-                        for (let i = 0; i < rows.length; i++) {
-                            newIndices.push(rows[i].dataset.index);
+                            for (let i = 0; i < rows.length; i++) {
+                                newIndices.push(rows[i].dataset.index);
 
-                            if (rows[i].dataset.index !== Array.prototype.indexOf.call(sortables, item) + 1) {
-                                doPost = true;
+                                if (rows[i].dataset.index !== Array.prototype.indexOf.call(sortables, item) + 1) {
+                                    doPost = true;
+                                }
                             }
-                        }
 
-                        let additionalData = [
-                            {
-                                'name': 'newIndices',
-                                'value': newIndices.join(',')
+                            let additionalData = [
+                                {
+                                    'name': 'newIndices',
+                                    'value': newIndices.join(',')
+                                }
+                            ];
+
+                            if (doPost) {
+                                MultiColumnEditorBundle.triggerAction(isBackend, event.item.querySelector('.drag-handle'), 'sortRows', additionalData);
                             }
-                        ];
-
-                        if (doPost) {
-                            MultiColumnEditorBundle.triggerAction(isBackend, event.item.querySelector('.drag-handle'), 'sortRows', additionalData);
-                        }
-                    },
+                        },
+                    });
                 });
             });
         }

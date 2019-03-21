@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2019-03-21
+
+### Fixed
+- import issues of sortable in backend
+
 ## [1.0.2] - 2019-03-20
 
 ### Fixed
