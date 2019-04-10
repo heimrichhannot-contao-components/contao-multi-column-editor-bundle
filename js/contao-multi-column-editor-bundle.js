@@ -4,8 +4,7 @@ class MultiColumnEditorBundle {
     static init() {
         let mce = document.querySelectorAll('.multi-column-editor');
 
-        if (mce.length < 1)
-        {
+        if (mce.length < 1) {
             return;
         }
 
@@ -13,12 +12,12 @@ class MultiColumnEditorBundle {
 
         utilsBundle.event.addDynamicEventListener('click', '.multi-column-editor .add', function(item, event) {
             event.preventDefault();
-            MultiColumnEditorBundle.triggerAction(isBackend, item, 'addRow');
+            MultiColumnEditorBundle.triggerAction(isBackend, item, 'addRow', item.href);
         });
 
         utilsBundle.event.addDynamicEventListener('click', '.multi-column-editor .delete', function(item, event) {
             event.preventDefault();
-            MultiColumnEditorBundle.triggerAction(isBackend, item, 'deleteRow');
+            MultiColumnEditorBundle.triggerAction(isBackend, item, 'deleteRow', item.href);
         });
 
         // fix for firefox and IE
@@ -26,12 +25,19 @@ class MultiColumnEditorBundle {
             event.preventDefault();
         });
 
+        utilsBundle.event.addDynamicEventListener('click', '[data-mce-click]', function(item, event) {
+            MultiColumnEditorBundle.triggerAction(isBackend, item, 'updateRows', item.getAttribute('data-mce-click'));
+        });
+
+        utilsBundle.event.addDynamicEventListener('change', '[data-mce-change]', function(item, event) {
+            MultiColumnEditorBundle.triggerAction(isBackend, item, 'updateRows', item.getAttribute('data-mce-change'));
+        });
+
         MultiColumnEditorBundle.initSortable(isBackend);
     }
 
     static initSortable(isBackend) {
-        if (isBackend)
-        {
+        if (isBackend) {
             new Sortables('.multi-column-editor-wrapper .sortable', {
                 constrain: true,
                 opacity: 0.6,
@@ -52,24 +58,22 @@ class MultiColumnEditorBundle {
                     let additionalData = [
                         {
                             'name': 'newIndices',
-                            'value': newIndices.join(',')
-                        }
+                            'value': newIndices.join(','),
+                        },
                     ];
 
                     if (doPost) {
                         MultiColumnEditorBundle.triggerAction(isBackend, row.querySelector('.drag-handle'), 'sortRows', additionalData);
                     }
-                }
+                },
             });
-        }
-        else
-        {
+        } else {
             import(/* webpackChunkName: "sortablejs" */ 'sortablejs').then(function(Sortable) {
                 let sortables = document.querySelectorAll('.multi-column-editor-wrapper .sortable');
 
                 sortables.forEach(function(item) {
                     Sortable.create(item, {
-                        'handle' : '.drag-handle',
+                        'handle': '.drag-handle',
                         onEnd: function(event) {
                             let newIndices = [],
                                 doPost = false,
@@ -86,8 +90,8 @@ class MultiColumnEditorBundle {
                             let additionalData = [
                                 {
                                     'name': 'newIndices',
-                                    'value': newIndices.join(',')
-                                }
+                                    'value': newIndices.join(','),
+                                },
                             ];
 
                             if (doPost) {
@@ -100,19 +104,17 @@ class MultiColumnEditorBundle {
         }
     }
 
-    static triggerAction(isBackend, link, action, additionalFormData, callback) {
+    static triggerAction(isBackend, link, action, url, additionalFormData, callback) {
         let form = link.closest('form'),
             formData = new FormData(),
-            editor = link.closest('.multi-column-editor'),
-            url = link.href;
+            editor = link.closest('.multi-column-editor');
 
         form.querySelectorAll(
-            'input[name]:not([disabled]), textarea[name]:not([disabled]), select[name]:not([disabled]), button[name]:not([disabled])'
+            'input[name]:not([disabled]), textarea[name]:not([disabled]), select[name]:not([disabled]), button[name]:not([disabled])',
         ).forEach(function(input) {
             // remove FORM_SUBMIT -> no submit callbacks should be fired
             if (input.name !== 'FORM_SUBMIT') {
-                switch (input.type)
-                {
+                switch (input.type) {
                     case 'checkbox':
                     case 'radio':
                         formData.append(input.name, input.checked ? input.value : '');
@@ -134,8 +136,7 @@ class MultiColumnEditorBundle {
             additionalFormData.forEach(function(input) {
                 // remove FORM_SUBMIT -> no submit callbacks should be fired
                 if (input.name !== 'FORM_SUBMIT') {
-                    switch (input.type)
-                    {
+                    switch (input.type) {
                         case 'checkbox':
                         case 'radio':
                             formData.append(input.name, input.checked ? input.value : '');
@@ -157,8 +158,7 @@ class MultiColumnEditorBundle {
                 document.dispatchEvent(customEvent);
 
                 if (xhr.status === 200) {
-                    if (isBackend)
-                    {
+                    if (isBackend) {
                         var response = document.createElement('div');
                         response.innerHTML = xhr.responseText;
 
@@ -168,8 +168,7 @@ class MultiColumnEditorBundle {
                         MultiColumnEditorBundle.initChosen();
                         MultiColumnEditorBundle.initSortable(isBackend);
 
-                        for (var n = 0; n < scriptElements.length; n++)
-                        {
+                        for (var n = 0; n < scriptElements.length; n++) {
                             eval(arr[n].innerHTML);
                         }
 
@@ -180,8 +179,7 @@ class MultiColumnEditorBundle {
                         var e = document.createEvent('CustomEvent');
                         e.initEvent('ajaxComplete', true, true);
                         document.dispatchEvent(e);
-                    }
-                    else {
+                    } else {
                         let data = JSON.parse(xhr.responseText);
 
                         let response = document.createElement('div');

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2019-04-10
+
+### Changed
+- added updateRows method and made adjustments to match version `2.1` of `heimrichhannot/contao-multi-column-editor-bundle`
+
 ## [1.0.3] - 2019-03-21
 
 ### Fixed
