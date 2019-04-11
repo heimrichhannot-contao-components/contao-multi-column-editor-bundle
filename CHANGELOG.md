@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2019-04-11
+
+### Fixed
+- js error on accessing non existing variable that prevent vendor js like datepicker to work properly on async response 
+
 ## [1.1.0] - 2019-04-10
 
 ### Changed

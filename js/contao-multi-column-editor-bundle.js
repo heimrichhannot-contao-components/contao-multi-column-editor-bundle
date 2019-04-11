@@ -169,7 +169,7 @@ class MultiColumnEditorBundle {
                         MultiColumnEditorBundle.initSortable(isBackend);
 
                         for (var n = 0; n < scriptElements.length; n++) {
-                            eval(arr[n].innerHTML);
+                            eval(scriptElements[n].innerHTML);
                         }
 
                         if (typeof callback === 'function') {
